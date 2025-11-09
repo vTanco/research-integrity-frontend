@@ -1,6 +1,6 @@
 // Research Integrity Analyzer – Connected to FastAPI backend
 
-const API_BASE_URL = "https://research-integrity.onrender.com"; // cambia esta URL tras el despliegue
+const API_BASE_URL = "https://research-integrity-backend.onrender.com";
 
 class ConflictAnalyzer {
     constructor() {
@@ -128,9 +128,9 @@ class ConflictAnalyzer {
 
     parseAnalysis(raw) {
         try {
-            return JSON.parse(raw.raw || raw);
+            return typeof raw === "string" ? JSON.parse(raw) : raw;
         } catch {
-            return { overall_risk: "medium", score: 50, categories: [], summary: raw.raw || raw };
+            return { overall_risk: "medium", score: 50, categories: [], summary: raw };
         }
     }
 
