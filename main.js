@@ -1,5 +1,3 @@
-// Research Integrity Analyzer – Connected to FastAPI backend
-
 const API_BASE_URL = "https://research-integrity-backend.onrender.com";
 
 class ConflictAnalyzer {
@@ -128,9 +126,13 @@ class ConflictAnalyzer {
 
     parseAnalysis(raw) {
         try {
-            return typeof raw === "string" ? JSON.parse(raw) : raw;
-        } catch {
-            return { overall_risk: "medium", score: 50, categories: [], summary: raw };
+            let text = typeof raw === "string" ? raw : raw.raw || JSON.stringify(raw);
+            text = text.replace(/```json|```/g, "").trim();
+            const parsed = JSON.parse(text);
+            return parsed;
+        } catch (e) {
+            console.error("Error parsing analysis:", e, raw);
+            return { overall_risk: "medium", score: 50, categories: [], summary: "Could not parse analysis response." };
         }
     }
 
