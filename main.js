@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://research-integrity-backend.onrender.com";
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 class ConflictAnalyzer {
     constructor() {
@@ -120,8 +120,17 @@ class ConflictAnalyzer {
         if (!analysis) return this.showError("No analysis data returned.");
 
         const parsed = this.parseAnalysis(analysis);
-        this.displayAnalysisResults(parsed, metadata);
+
+        // Merge metadata into the analysis object
+        if (metadata) {
+            parsed.source = metadata.title || "Uploaded Document";
+            parsed.timestamp = new Date().toISOString();
+        }
+
         localStorage.setItem('currentAnalysis', JSON.stringify(parsed));
+
+        // Redirect to report page
+        window.location.href = 'report.html';
     }
 
     parseAnalysis(raw) {

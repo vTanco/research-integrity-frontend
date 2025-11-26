@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis Report - Research Integrity Analyzer</title>
-    
+
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
@@ -12,10 +13,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
     <link href="https://unpkg.com/splitting@1.0.6/dist/splitting.css" rel="stylesheet">
     <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.min.js"></script>
-    
+
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -141,9 +144,17 @@
             font-weight: 600;
         }
 
-        .risk-score.high { color: var(--alert-red); }
-        .risk-score.medium { color: var(--caution-amber); }
-        .risk-score.low { color: var(--safe-green); }
+        .risk-score.high {
+            color: var(--alert-red);
+        }
+
+        .risk-score.medium {
+            color: var(--caution-amber);
+        }
+
+        .risk-score.low {
+            color: var(--safe-green);
+        }
 
         .summary-content {
             display: grid;
@@ -220,8 +231,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Findings List */
@@ -526,15 +544,345 @@
             }
         }
 
+        /* New Report Styling */
+        .score-display-large {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .score-circle {
+            text-align: center;
+        }
+
+        .score-circle span:first-child {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--warm-white);
+            display: block;
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 0.8rem;
+            color: var(--neutral-gray);
+        }
+
+        .score-bar-container {
+            flex: 1;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin: 0 1.5rem;
+            overflow: hidden;
+        }
+
+        .score-bar {
+            height: 100%;
+            background: var(--safe-green);
+            width: 0%;
+            /* Animated */
+            border-radius: 6px;
+            transition: width 1s ease;
+        }
+
+        .risk-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border: 1px solid currentColor;
+        }
+
+        .evidence-box,
+        .rules-box {
+            background: rgba(30, 40, 60, 0.6);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .rules-box {
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .evidence-box h3,
+        .rules-box h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            color: var(--warm-white);
+        }
+
+        .evidence-box h3 .icon,
+        .rules-box h3 .icon {
+            margin-right: 0.5rem;
+        }
+
+        .findings-list li {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: var(--light-gray);
+            line-height: 1.5;
+            list-style: none;
+            display: flex;
+        }
+
+        .findings-list li::before {
+            content: counter(item) ". ";
+            counter-increment: item;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .findings-list {
+            counter-reset: item;
+        }
+
+        .recommendations-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .recommendations-list {
+            list-style: none;
+        }
+
+        .recommendation-item {
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid rgba(39, 174, 96, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .recommendation-number {
+            background: var(--safe-green);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .recommendation-text {
+            color: var(--warm-white);
+            font-size: 0.95rem;
+        }
+
+        /* Layout */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(26, 35, 50, 0.95);
+            border-right: 1px solid rgba(74, 144, 226, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--warm-white);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.8rem;
+            color: var(--neutral-gray);
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--neutral-gray);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--light-gray);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-nav .nav-item:hover,
+        .sidebar-nav .nav-item.active {
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .sidebar-nav .nav-icon {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--warm-white);
+        }
+
+        .stat-value.warning {
+            color: var(--caution-amber);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .lang-btn,
+        .source-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn:hover,
+        .source-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--warm-white);
+        }
+
+        /* Adjust Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2rem;
+            width: calc(100% - 280px);
+        }
+
+        /* Hide Old Header */
+        .header {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem 0.5rem;
+            }
+
+            .logo-text,
+            .nav-section-title,
+            .stat-row,
+            .sidebar-footer button {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+
+            .sidebar-nav .nav-item {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .sidebar-nav .nav-icon {
+                margin-right: 0;
+            }
+        }
+
         /* Animation Classes */
         .fade-in {
             opacity: 0;
         }
     </style>
 </head>
+
 <body>
     <div id="backgroundCanvas"></div>
-    
+
     <header class="header fade-in">
         <div class="container">
             <h1 class="app-title">Analysis Report</h1>
@@ -542,338 +890,272 @@
         </div>
     </header>
 
-    <main class="main-content">
-        <div class="container">
-            <!-- Executive Summary -->
-            <section class="executive-summary fade-in">
-                <div class="summary-header">
-                    <div class="paper-info">
-                        <h1 id="paperTitle">AI Ethics in Medical Research Publication</h1>
-                        <div class="paper-meta" id="paperMeta">
-                            Analyzed on <span id="analysisDate">November 8, 2025</span> • 
-                            4 conflict categories examined • 
-                            12 potential issues identified
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo-icon">🔍</div>
+                    <div class="logo-text">
+                        <h1>Research Integrity</h1>
+                        <span>Analyzer</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">NAVIGATION</span>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-icon">📊</span> Dashboard
+                    </a>
+                    <a href="index.html" class="nav-item">
+                        <span class="nav-icon">📤</span> New Analysis
+                    </a>
+                    <a href="#" class="nav-item active">
+                        <span class="nav-icon">📁</span> History
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">⚡</span> Methodology
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">ℹ️</span> About Us
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">❤️</span> Support Us
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">QUICK STATS</span>
+                    <div class="stat-row">
+                        <span class="stat-label"><span class="icon">📊</span> Papers</span>
+                        <span class="stat-value">7</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label"><span class="icon">⚠️</span> Avg Risk</span>
+                        <span class="stat-value warning">44</span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="lang-btn">🌐 EN</button>
+                <button class="source-btn">💻 Source Code</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Executive Summary -->
+                <section class="executive-summary fade-in">
+                    <div class="summary-header">
+                        <div class="paper-info">
+                            <h1 id="paperTitle">AI Ethics in Medical Research Publication</h1>
+                            <div class="paper-meta" id="paperMeta">
+                                Analyzed on <span id="analysisDate">November 8, 2025</span> •
+                                4 conflict categories examined •
+                                12 potential issues identified
+                            </div>
                         </div>
-                    </div>
-                    <div class="overall-risk">
-                        <div class="risk-score high" id="overallRiskScore">78</div>
-                        <div class="risk-label">High Risk</div>
-                    </div>
-                </div>
-                
-                <div class="summary-content">
-                    <div class="summary-item">
-                        <div class="value" id="financialScore">85</div>
-                        <div class="label">Financial Conflicts</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="value" id="institutionalScore">62</div>
-                        <div class="label">Institutional Conflicts</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="value" id="personalScore">35</div>
-                        <div class="label">Personal Relationships</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="value" id="publicationScore">72</div>
-                        <div class="label">Publication Patterns</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Financial Conflicts Section -->
-            <section class="analysis-section fade-in">
-                <div class="section-header" onclick="toggleSection('financial')">
-                    <span class="section-icon">💰</span>
-                    <h2 class="section-title">Financial Conflicts</h2>
-                    <span class="section-toggle" id="financial-toggle">▼</span>
-                </div>
-                <div class="section-content" id="financial-content">
-                    <ul class="findings-list">
-                        <li class="finding-item high-risk">
-                            <span class="finding-icon">⚠️</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Significant Industry Consulting Fees</div>
-                                <div class="finding-description">
-                                    Lead author receives $500,000 annually in consulting fees from three pharmaceutical companies 
-                                    whose products are evaluated in this research. This represents a substantial financial interest 
-                                    that could influence research outcomes.
-                                </div>
-                            </div>
-                        </li>
-                        <li class="finding-item high-risk">
-                            <span class="finding-icon">🔬</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Patent Applications Related to Research</div>
-                                <div class="finding-description">
-                                    Two patent applications filed by the authors cover methodologies described in this paper. 
-                                    Potential for significant financial gain from patent licensing creates conflict of interest.
-                                </div>
-                            </div>
-                        </li>
-                        <li class="finding-item medium-risk">
-                            <span class="finding-icon">📈</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Stock Ownership in Competing Firms</div>
-                                <div class="finding-description">
-                                    Authors hold stock positions in two biotech companies that could be affected by research findings. 
-                                    While disclosed, the magnitude of holdings suggests potential for financial bias.
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <div class="viz-container">
-                        <h3 class="viz-title">Funding Timeline Analysis</h3>
-                        <div class="chart-container" id="fundingChart"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Institutional Conflicts Section -->
-            <section class="analysis-section fade-in">
-                <div class="section-header" onclick="toggleSection('institutional')">
-                    <span class="section-icon">🏛️</span>
-                    <h2 class="section-title">Institutional Conflicts</h2>
-                    <span class="section-toggle" id="institutional-toggle">▼</span>
-                </div>
-                <div class="section-content" id="institutional-content">
-                    <ul class="findings-list">
-                        <li class="finding-item medium-risk">
-                            <span class="finding-icon">🏢</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Multiple Institutional Affiliations</div>
-                                <div class="finding-description">
-                                    Authors hold simultaneous positions at three research institutions, creating potential for 
-                                    institutional conflicts and divided loyalties in research conduct and reporting.
-                                </div>
-                            </div>
-                        </li>
-                        <li class="finding-item medium-risk">
-                            <span class="finding-icon">🔧</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Equipment Provided by Industry Partner</div>
-                                <div class="finding-description">
-                                    Research equipment valued at $250,000 provided by industry partner with vested interest 
-                                    in research outcomes. Creates dependency relationship that could influence methodology.
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <div class="viz-container">
-                        <h3 class="viz-title">Institutional Relationship Network</h3>
-                        <div class="chart-container" id="institutionalChart"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Personal Relationships Section -->
-            <section class="analysis-section fade-in">
-                <div class="section-header" onclick="toggleSection('personal')">
-                    <span class="section-icon">👥</span>
-                    <h2 class="section-title">Personal Relationships</h2>
-                    <span class="section-toggle" id="personal-toggle">▼</span>
-                </div>
-                <div class="section-content" id="personal-content">
-                    <div class="author-network">
-                        <div class="author-card">
-                            <div class="author-avatar">👨‍🔬</div>
-                            <div class="author-name">Dr. Sarah Chen</div>
-                            <div class="author-affiliation">Stanford University</div>
-                            <div class="author-connections">5 co-authored papers</div>
-                        </div>
-                        <div class="author-card">
-                            <div class="author-avatar">👩‍🔬</div>
-                            <div class="author-name">Prof. Michael Rodriguez</div>
-                            <div class="author-affiliation">MIT Research Lab</div>
-                            <div class="author-connections">3 co-authored papers</div>
-                        </div>
-                        <div class="author-card">
-                            <div class="author-avatar">👨‍🔬</div>
-                            <div class="author-name">Dr. Emily Watson</div>
-                            <div class="author-affiliation">Harvard Medical</div>
-                            <div class="author-connections">7 co-authored papers</div>
-                        </div>
-                        <div class="author-card">
-                            <div class="author-avatar">👩‍🔬</div>
-                            <div class="author-name">Prof. David Kim</div>
-                            <div class="author-affiliation">UCSF Research</div>
-                            <div class="author-connections">2 co-authored papers</div>
+                        <div class="overall-risk">
+                            <div class="risk-score high" id="overallRiskScore">78</div>
+                            <div class="risk-label">High Risk</div>
                         </div>
                     </div>
 
-                    <ul class="findings-list">
-                        <li class="finding-item low-risk">
-                            <span class="finding-icon">🤝</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Frequent Collaboration Patterns</div>
-                                <div class="finding-description">
-                                    Authors have collaborated on multiple previous publications. While this shows research 
-                                    continuity, it may indicate limited external perspective in peer review process.
-                                </div>
-                            </div>
-                        </li>
-                        <li class="finding-item low-risk">
-                            <span class="finding-icon">🎓</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Mentor-Mentee Relationships</div>
-                                <div class="finding-description">
-                                    Two authors have established mentor-mentee relationship from graduate studies. 
-                                    This could create hierarchical dynamics affecting research objectivity.
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- Publication Patterns Section -->
-            <section class="analysis-section fade-in">
-                <div class="section-header" onclick="toggleSection('publication')">
-                    <span class="section-icon">📊</span>
-                    <h2 class="section-title">Publication Patterns</h2>
-                    <span class="section-toggle" id="publication-toggle">▼</span>
-                </div>
-                <div class="section-content" id="publication-content">
-                    <ul class="findings-list">
-                        <li class="finding-item high-risk">
-                            <span class="finding-icon">📚</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Elevated Self-Citation Rate</div>
-                                <div class="finding-description">
-                                    35% self-citation rate in recent publications, significantly above the 15% typical in this field. 
-                                    This may indicate attempts to artificially inflate citation metrics and research impact.
-                                </div>
-                            </div>
-                        </li>
-                        <li class="finding-item medium-risk">
-                            <span class="finding-icon">⚡</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Rapid Publication Timeline</div>
-                                <div class="finding-description">
-                                    Unusually rapid progression from data collection to publication (3 months) suggests 
-                                    potential prior knowledge or pre-planned research outcomes.
-                                </div>
-                            </div>
-                        </li>
-                        <li class="finding-item medium-risk">
-                            <span class="finding-icon">🕸️</span>
-                            <div class="finding-content">
-                                <div class="finding-title">Citation Network Clustering</div>
-                                <div class="finding-description">
-                                    Citation patterns show heavy concentration within single research group network, 
-                                    limiting exposure to diverse scientific perspectives and external validation.
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <div class="viz-container">
-                        <h3 class="viz-title">Publication Timeline Analysis</h3>
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-marker"></div>
-                                <div class="timeline-date">January 2025</div>
-                                <div class="timeline-event">Research funding secured from industry partners</div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker"></div>
-                                <div class="timeline-date">March 2025</div>
-                                <div class="timeline-event">Data collection completed</div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker"></div>
-                                <div class="timeline-date">April 2025</div>
-                                <div class="timeline-event">Patent applications filed</div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker"></div>
-                                <div class="timeline-date">June 2025</div>
-                                <div class="timeline-event">Paper submitted for publication</div>
-                            </div>
+                    <div class="summary-content">
+                        <div class="summary-item">
+                            <div class="value" id="financialScore">85</div>
+                            <div class="label">Financial Conflicts</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="value" id="institutionalScore">62</div>
+                            <div class="label">Institutional Conflicts</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="value" id="personalScore">35</div>
+                            <div class="label">Personal Relationships</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="value" id="publicationScore">72</div>
+                            <div class="label">Publication Patterns</div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Recommendations Section -->
-            <section class="analysis-section fade-in">
-                <div class="section-header" onclick="toggleSection('recommendations')">
-                    <span class="section-icon">💡</span>
-                    <h2 class="section-title">Recommendations</h2>
-                    <span class="section-toggle" id="recommendations-toggle">▼</span>
-                </div>
-                <div class="section-content" id="recommendations-content">
-                    <div class="recommendations">
-                        <div class="recommendation-item">
-                            <span class="recommendation-icon">🔄</span>
-                            <div class="recommendation-text">
-                                <strong>Independent Review:</strong> Submit paper for independent statistical analysis and methodology review by unaffiliated experts in the field.
+                <!-- Textual Bias & Reporting Quality Section -->
+                <section class="analysis-section fade-in">
+                    <div class="section-header" onclick="toggleSection('textual')">
+                        <span class="section-icon">📝</span>
+                        <h2 class="section-title">Textual Bias & Reporting Quality</h2>
+                        <span class="section-toggle" id="textual-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="textual-content">
+                        <div class="score-display-large">
+                            <div class="score-circle">
+                                <span id="textualScore">--</span>
+                                <span class="score-max">/ 100</span>
                             </div>
+                            <div class="score-bar-container">
+                                <div class="score-bar" id="textualBar"></div>
+                            </div>
+                            <div class="risk-badge" id="textualRisk">LOW RISK</div>
                         </div>
-                        <div class="recommendation-item">
-                            <span class="recommendation-icon">📋</span>
-                            <div class="recommendation-text">
-                                <strong>Enhanced Disclosure:</strong> Require detailed disclosure of all financial relationships, including specific dollar amounts and timing of payments.
-                            </div>
+
+                        <div class="evidence-box">
+                            <h3><span class="icon">🛡️</span> Evidence Found:</h3>
+                            <ul class="findings-list" id="textualEvidence">
+                                <!-- Populated by JS -->
+                            </ul>
                         </div>
-                        <div class="recommendation-item">
-                            <span class="recommendation-icon">🔍</span>
-                            <div class="recommendation-text">
-                                <strong>Data Verification:</strong> Conduct independent verification of research data and methodology through third-party audit.
-                            </div>
-                        </div>
-                        <div class="recommendation-item">
-                            <span class="recommendation-icon">📊</span>
-                            <div class="recommendation-text">
-                                <strong>Conflict Management:</strong> Implement formal conflict management plan including recusal from certain editorial decisions.
-                            </div>
+
+                        <div class="rules-box">
+                            <h3><span class="icon">ℹ️</span> Rules Applied:</h3>
+                            <p id="textualDescription">Analysis of language objectivity and limitations disclosure.</p>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Export Section -->
-            <section class="export-section fade-in">
-                <h3>Export Analysis Report</h3>
-                <p style="margin-bottom: 1rem; color: var(--neutral-gray); font-size: 0.9rem;">
-                    Generate comprehensive report for institutional review or further investigation
-                </p>
-                <button class="export-btn" onclick="exportReport('pdf')">📄 Export PDF</button>
-                <button class="export-btn" onclick="exportReport('json')">📊 Export Data</button>
-                <button class="export-btn" onclick="shareReport()">🔗 Share Link</button>
-            </section>
-        </div>
-    </main>
+                <!-- Funding-Outcome Alignment Section -->
+                <section class="analysis-section fade-in">
+                    <div class="section-header" onclick="toggleSection('funding')">
+                        <span class="section-icon">💰</span>
+                        <h2 class="section-title">Funding-Outcome Alignment</h2>
+                        <span class="section-toggle" id="funding-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="funding-content">
+                        <div class="score-display-large">
+                            <div class="score-circle">
+                                <span id="fundingScore">--</span>
+                                <span class="score-max">/ 100</span>
+                            </div>
+                            <div class="score-bar-container">
+                                <div class="score-bar" id="fundingBar"></div>
+                            </div>
+                            <div class="risk-badge" id="fundingRisk">LOW RISK</div>
+                        </div>
 
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <div class="nav-container">
-            <a href="index.html" class="nav-item">
-                <span class="nav-icon">🔍</span>
-                <span class="nav-label">Analyze</span>
-            </a>
-            <a href="report.html" class="nav-item active">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">Reports</span>
-            </a>
-            <a href="settings.html" class="nav-item">
-                <span class="nav-icon">⚙️</span>
-                <span class="nav-label">Settings</span>
-            </a>
-        </div>
-    </nav>
+                        <div class="evidence-box">
+                            <h3><span class="icon">🛡️</span> Evidence Found:</h3>
+                            <ul class="findings-list" id="fundingEvidence">
+                                <!-- Populated by JS -->
+                            </ul>
+                        </div>
+
+                        <div class="rules-box">
+                            <h3><span class="icon">ℹ️</span> Rules Applied:</h3>
+                            <p id="fundingDescription">Analysis of funding sources and result sentiment.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Author-Institution-Sponsor Network Section -->
+                <section class="analysis-section fade-in">
+                    <div class="section-header" onclick="toggleSection('network')">
+                        <span class="section-icon">🕸️</span>
+                        <h2 class="section-title">Author-Institution-Sponsor Network</h2>
+                        <span class="section-toggle" id="network-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="network-content">
+                        <div class="score-display-large">
+                            <div class="score-circle">
+                                <span id="networkScore">--</span>
+                                <span class="score-max">/ 100</span>
+                            </div>
+                            <div class="score-bar-container">
+                                <div class="score-bar" id="networkBar"></div>
+                            </div>
+                            <div class="risk-badge" id="networkRisk">LOW RISK</div>
+                        </div>
+
+                        <div class="evidence-box">
+                            <h3><span class="icon">🛡️</span> Evidence Found:</h3>
+                            <ul class="findings-list" id="networkEvidence">
+                                <!-- Populated by JS -->
+                            </ul>
+                        </div>
+
+                        <div class="rules-box">
+                            <h3><span class="icon">ℹ️</span> Rules Applied:</h3>
+                            <p id="networkDescription">Analysis of affiliations and commercial ties.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Journal / Editorial Integrity Section -->
+                <section class="analysis-section fade-in">
+                    <div class="section-header" onclick="toggleSection('journal')">
+                        <span class="section-icon">⚖️</span>
+                        <h2 class="section-title">Journal / Editorial Integrity</h2>
+                        <span class="section-toggle" id="journal-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="journal-content">
+                        <div class="score-display-large">
+                            <div class="score-circle">
+                                <span id="journalScore">--</span>
+                                <span class="score-max">/ 100</span>
+                            </div>
+                            <div class="score-bar-container">
+                                <div class="score-bar" id="journalBar"></div>
+                            </div>
+                            <div class="risk-badge" id="journalRisk">LOW RISK</div>
+                        </div>
+
+                        <div class="evidence-box">
+                            <h3><span class="icon">🛡️</span> Evidence Found:</h3>
+                            <ul class="findings-list" id="journalEvidence">
+                                <!-- Populated by JS -->
+                            </ul>
+                        </div>
+
+                        <div class="rules-box">
+                            <h3><span class="icon">ℹ️</span> Rules Applied:</h3>
+                            <p id="journalDescription">Assessment of publication venue and peer review.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recommendations Section -->
+                <section class="analysis-section fade-in">
+                    <div class="section-header" onclick="toggleSection('recommendations')">
+                        <span class="section-icon">💡</span>
+                        <h2 class="section-title">Recommendations for Readers</h2>
+                        <span class="section-toggle" id="recommendations-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="recommendations-content">
+                        <div class="recommendations-box">
+                            <ul class="recommendations-list" id="recommendationsList">
+                                <!-- Populated by JS -->
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Export Section -->
+                <section class="export-section fade-in">
+                    <h3>Export Analysis Report</h3>
+                    <p style="margin-bottom: 1rem; color: var(--neutral-gray); font-size: 0.9rem;">
+                        Generate comprehensive report for institutional review or further investigation
+                    </p>
+                    <button class="export-btn" onclick="exportReport('pdf')">📄 Export PDF</button>
+                    <button class="export-btn" onclick="exportReport('json')">📊 Export Data</button>
+                    <button class="export-btn" onclick="shareReport()">🔗 Share Link</button>
+                </section>
+            </div>
+        </main>
+    </div>
 
     <!-- JavaScript -->
     <script src="main.js"></script>
-    
+
     <script>
         // Section toggle functionality
         function toggleSection(sectionId) {
             const content = document.getElementById(sectionId + '-content');
             const toggle = document.getElementById(sectionId + '-toggle');
-            
+
             if (content.classList.contains('expanded')) {
                 content.classList.remove('expanded');
                 toggle.classList.remove('expanded');
@@ -1013,33 +1295,74 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize splitting.js for text animations
             Splitting();
-            
+
             // Load analysis data
             const analysisData = JSON.parse(localStorage.getItem('currentAnalysis'));
+
             if (analysisData) {
-                // Update page with analysis data
-                document.getElementById('paperTitle').textContent = analysisData.source;
-                document.getElementById('analysisDate').textContent = new Date(analysisData.timestamp).toLocaleDateString();
-                
-                // Update risk scores
+                // Update header info
+                if (analysisData.source) document.getElementById('paperTitle').textContent = analysisData.source;
+                document.getElementById('analysisDate').textContent = new Date().toLocaleDateString();
+
+                // Update Overall Risk
                 const riskColors = { high: '#e74c3c', medium: '#f39c12', low: '#27ae60' };
                 const overallRiskScore = document.getElementById('overallRiskScore');
-                overallRiskScore.textContent = analysisData.score;
-                overallRiskScore.className = `risk-score ${analysisData.overallRisk}`;
-                overallRiskScore.style.color = riskColors[analysisData.overallRisk];
-                
-                // Update category scores
-                analysisData.categories.forEach(category => {
-                    const scoreElement = document.getElementById(category.name.toLowerCase().replace(' ', '') + 'Score');
-                    if (scoreElement) {
-                        scoreElement.textContent = category.score;
+                if (overallRiskScore) {
+                    overallRiskScore.textContent = analysisData.score;
+                    overallRiskScore.className = `risk-score ${analysisData.overall_risk}`;
+                    overallRiskScore.style.color = riskColors[analysisData.overall_risk];
+                }
+
+                // Update Summary Cards
+                // Note: We might need to calculate these if not explicitly provided, or map them from the new categories
+                // For now, let's try to map them if possible, or hide them if not relevant to the new design
+                // The new design focuses on the detailed sections.
+
+                // Helper to update a section
+                const updateSection = (id, categoryName) => {
+                    const cat = analysisData.categories.find(c => c.name === categoryName);
+                    if (cat) {
+                        // Score
+                        document.getElementById(`${id}Score`).textContent = cat.score;
+
+                        // Bar
+                        const bar = document.getElementById(`${id}Bar`);
+                        bar.style.width = `${cat.score}%`;
+                        bar.style.backgroundColor = riskColors[cat.level];
+
+                        // Risk Badge
+                        const badge = document.getElementById(`${id}Risk`);
+                        badge.textContent = `${cat.level} RISK`;
+                        badge.style.color = riskColors[cat.level];
+                        badge.style.borderColor = riskColors[cat.level];
+
+                        // Evidence
+                        const evidenceList = document.getElementById(`${id}Evidence`);
+                        evidenceList.innerHTML = cat.evidence.map(e => `<li>${e}</li>`).join('');
+
+                        // Description/Rules
+                        document.getElementById(`${id}Description`).textContent = cat.description;
                     }
-                });
+                };
+
+                // Update Sections
+                updateSection('textual', 'Textual Bias & Reporting Quality');
+                updateSection('funding', 'Funding-Outcome Alignment');
+                updateSection('network', 'Author-Institution-Sponsor Network');
+                updateSection('journal', 'Journal / Editorial Integrity');
+
+                // Update Recommendations
+                const recList = document.getElementById('recommendationsList');
+                if (analysisData.recommendations && recList) {
+                    recList.innerHTML = analysisData.recommendations.map((rec, index) => `
+                        <div class="recommendation-item">
+                            <div class="recommendation-number">${index + 1}</div>
+                            <div class="recommendation-text">${rec}</div>
+                        </div>
+                    `).join('');
+                }
             }
-            
-            // Initialize charts
-            setTimeout(initializeCharts, 500);
-            
+
             // Animate page elements
             anime({
                 targets: '.fade-in',
@@ -1052,4 +1375,5 @@
         });
     </script>
 </body>
+
 </html>
